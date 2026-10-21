@@ -1,137 +1,232 @@
-# Enterprise ERP — Technical Case Study
+# Systra School ERP — Technical Case Study
 
-## 1. Project Overview & Problem Statement
+> **Implementation status:** This README describes functionality present in
+> the checked-in source. Builds, migrations, tests, deployed endpoints, and
+> end-to-end behavior have not been verified as part of this documentation
+> update. Source presence must not be interpreted as evidence of production
+> readiness.
 
-This project is a modular Enterprise Resource Planning (ERP) application under active development. It uses a React 19 / Vite single-page application (SPA) for the operational interface and a TypeScript Express API backed by PostgreSQL through Prisma ORM. The foundation currently concentrates on Identity and Access Management (IAM): user creation, role assignment, a permissions matrix, login, and protected client routes.
+## 1. Project Overview & Technology Stack
 
-An ERP becomes difficult to evolve when each business domain—such as finance, procurement, inventory, HR, or education administration—owns isolated data and authorization rules. The design addresses that problem by establishing a shared identity layer and a consistent API/data boundary before domain modules are added. This supports:
+Systra is a school ERP under active development. The frontend is a React 19,
+TypeScript, Vite single-page application using Material UI, Redux Toolkit,
+Axios, and React Router. The backend is a TypeScript / Express 5 API using
+Prisma 6 and PostgreSQL.
 
-- **Consistent authorization:** permissions are modeled as data rather than scattered as hard-coded UI conditions.
-- **Composable modules:** future ERP areas can be represented as permission records and implemented as independent API modules without replacing the IAM core.
-- **Relational integrity:** PostgreSQL relationships prevent orphaned role-permission records and Prisma provides a typed access layer over them.
-- **Operational scale:** a separate SPA and API allow each tier to be deployed and scaled independently behind the supplied Nginx configuration.
+The source includes workflows for academic structure, students and enrollments,
+teachers and assignments, attendance, user administration, and permissions.
+The backend separates a central **admin database** from per-tenant databases.
+Tenant-aware middleware validates a user's membership and resolves a tenant
+database client before protected domain routes use it.
 
-The present schema is single-organization: there is no tenant or organization key yet. Multi-tenancy is therefore a planned extension, not a current capability. A robust next design would introduce `Organization` and scoped membership/role assignments, then require tenant scope on every domain query and unique constraint.
+Package manifests declare React 19, TypeScript 5.9, Vite 8, MUI 9, Redux
+Toolkit, React Router 7, and Axios for the web application. The API manifest
+declares Express 5, Prisma 6, bcrypt, JWT, Swagger UI, Vitest, and Supertest.
+These declarations do not establish that builds or tests pass.
 
 ## 2. System Architecture & Folder Pattern
 
-The backend follows a **modular layered architecture**. Each business capability is located under `src/modules/<module>` and exposes routes, controllers, services, types/DTOs, and mappers where appropriate. Requests move from the HTTP boundary through application logic to Prisma; controllers do not embed SQL or database queries. Prisma is currently the persistence boundary rather than a separately named repository layer.
+The frontend organizes routed experiences under `src/pages`, shared UI under
+`src/components`, API helpers under `src/api`, and state under `src/store`.
+The API separates Express setup and shared middleware from feature modules
+under `src/modules`. Modules commonly contain routes, controllers, and
+services. Prisma calls provide the persistence boundary; validation and data
+access responsibilities can live in services as well as controllers, so this
+is not a strict universal layering rule.
 
 ```text
 E:\erp
 ├── web.erp/                              # React/Vite client
 │   ├── src/
-│   │   ├── api/                           # Axios instance and feature API helpers
-│   │   ├── components/gaurd/              # Client-side route authorization
-│   │   ├── layout/                        # Authenticated/blank shells, navigation
-│   │   ├── pages/ and views/              # Route-level and feature UI
-│   │   ├── router/                        # Lazy route configuration and role IDs
-│   │   ├── store/                         # Redux Toolkit slices and typed hooks
-│   │   ├── theme/                         # MUI theme composition
-│   │   ├── App.tsx                        # App initialization and router provider
-│   │   └── main.tsx                       # React root, Redux provider, suspense
-│   └── vite.config.ts                     # /erp base path and build configuration
+│   │   ├── api/                           # Axios client and feature API helpers
+│   │   ├── components/                    # Shared UI and route guards (gaurd)
+│   │   ├── layout/                        # Authenticated layout and navigation
+│   │   ├── pages/                         # Academic, student, teacher, attendance,
+│   │   │                                  # user, permissions, and audit screens
+│   │   ├── router/                        # React Router routes and guards
+│   │   └── store/                         # Redux Toolkit state
 ├── api.erp/                              # Express/TypeScript API
 │   ├── prisma/
-│   │   ├── schemas/                       # Prisma datasource and IAM model files
-│   │   └── migrations/                    # Versioned PostgreSQL DDL
+│   │   ├── admin/                         # Admin schema, migrations, and seed
+│   │   └── tenant/                        # Tenant schema, migrations, and seed
 │   └── src/
-│       ├── configs/                       # Prisma client and Swagger configuration
-│       ├── errors/                        # AppError and centralized error handler
-│       ├── helpers/                       # JWT and password helpers
-│       ├── middlewares/                   # Authentication middleware
-│       ├── modules/
-│       │   ├── auth/                      # Login controller/service/mapper/routes
-│       │   ├── iam/                       # Roles and permission-matrix reads
-│       │   └── user/                      # User CRUD orchestration
-│       ├── utils/                         # Prisma error mapping
-│       ├── app.ts                         # Express cross-cutting middleware
-│       └── server.ts                      # Versioned route mounting and startup
-├── api.documentation/                     # API/Postman documentation assets
-└── nginx/                                 # Local reverse-proxy configuration
+│       ├── middlewares/                   # Authentication, tenant, permissions
+│       ├── modules/                       # Auth, IAM, users, academics, students,
+│       │                                  # teachers, attendance, audit, tenant
+│       ├── infrastructure/                # Admin and tenant Prisma clients
+│       ├── errors/                        # Application errors and error handler
+│       └── app.ts / server.ts             # Middleware, routes, and startup
+└── api.documentation/                    # API and static case-study documentation
 ```
 
 ```text
-React view → API helper → Axios interceptor → /api/v1 route
-                                                  │
-                                           controller (HTTP/validation)
-                                                  │
-                                           service (use-case logic)
-                                                  │
-                                           Prisma Client → PostgreSQL
+React page → feature API helper / Axios → Express route
+         → authenticate → resolve tenant → require permission
+         → controller / service → tenant Prisma client → tenant PostgreSQL DB
 ```
 
-This pattern keeps change local. Adding, for example, Inventory should add `modules/inventory` and a client feature/API helper rather than enlarge a global controller or database utility. Controllers remain testable HTTP adapters, services retain reusable business policies, and Prisma calls are kept near the business operation that owns them. It also makes a future repository abstraction straightforward if query reuse, multiple stores, or more complex transaction boundaries justify it.
+Most feature routers are mounted under both `/api` and `/api/v1`; auth and
+tenant routes also have versioned aliases. `/health` and Swagger UI at
+`/api-docs` are mounted separately. This documents route wiring in source, not
+deployment availability.
 
-## 3. Database Design & Schema Modeling
+## 3. Database Architecture & Relationships
 
-Prisma is configured with PostgreSQL through `DATABASE_URL`, with schemas split into `base.prisma` (generator/datasource) and `iam.prisma` (domain model). `prisma generate` runs before development and builds, producing a typed Prisma Client. Service methods consequently use typed operations such as `prisma.user.create`, `findUnique`, `findMany`, relation `include`, and relation `select`; `Prisma.UserCreateInput` is used when creating a user.
+The API configures two PostgreSQL Prisma clients:
 
-| Model | Purpose and relationships |
+- **Admin database:** generated from `prisma/admin/schema.prisma` and
+  configured through `ADMIN_DATABASE_URL`.
+- **Tenant database:** generated from `prisma/tenant/schema.prisma`; the API
+  resolves a tenant's database configuration and creates/reuses a Prisma client
+  for that tenant.
+
+Migrations are configured separately under `prisma/admin/migrations` and
+`prisma/tenant/migrations`. The separate files under `prisma/schemas` are not
+the schema paths selected by the current Prisma configs.
+
+| Database / domain | Models and relationship facts |
 | --- | --- |
-| `User` | Login identity with unique, indexed `userEmail`, bcrypt password hash, and audit timestamps. It has a many-to-many `assignedRoles` relation with `Role`. |
-| `Role` | A named authority grouping. It connects many users and many permission records through `RolePermission`. |
-| `Permission` | Master catalog of ERP modules/features, identified by a unique `permissionName` (for example, `students` or `fees`). |
-| `RolePermission` | Explicit role/permission join matrix. Its compound primary key `(roleId, permissionId)` permits each role/module pair once and stores CRUD plus restriction/exception flags. |
+| **Admin database** | `User`, `Tenant`, `UserTenantMembership`, `TenantDatabaseConfig`, `RefreshSession`, and `RefreshSessionToken`. Memberships link users and tenants through Prisma foreign keys; database configuration and refresh sessions also have tenant/user relations. Refresh-session tokens reference sessions and include a self-reference for token rotation history. |
+| **Tenant database: school setup** | `Institution`, `AcademicYear`, `Class`, `Section`, and `Subject`. `Section` has foreign-key relations to `Class` and `AcademicYear`. |
+| **Tenant database: school operations** | `Teacher`, `TeacherAssignment`, `Student`, `Guardian`, `StudentGuardian`, `Enrollment`, `AdmissionSerial`, `AttendanceSession`, `AttendanceRecord`, and `AuditLog`. Teacher assignments, student/guardian joins, enrollments, admission serials, and attendance records have in-database relations as declared in the tenant Prisma schema. |
+| **Tenant database: access control** | `UserProfile`, `Role`, `Permission`, `UserRole`, and `RolePermission`. User-role and role-permission join rows have tenant-database foreign keys; `RolePermission` has a composite primary key. |
 
-The User–Role relationship is Prisma’s implicit many-to-many association. Role–Permission is intentionally explicit because the relationship carries business attributes: `canRead`, `canAdd`, `canEdit`, `canDelete`, `isRestricted`, and `isExceptional`. This is the correct schema shape for a dynamic CRUD matrix; a simple join table could not hold action-level access decisions.
+Cross-database identifiers are **logical references, not foreign keys**.
+Tenant `UserProfile.userId`, `Teacher.userId`,
+`AttendanceSession.createdByUserId`, and `AuditLog.actorUserId` do not have
+Prisma relations to admin-database records. A database foreign key cannot span
+these separately connected databases, so identity and lifecycle consistency
+must be enforced by application logic.
 
-The model maps TypeScript-oriented fields to stable snake_case PostgreSQL table/column names with `@map`/`@@map`. Primary keys use database-generated integers; `createdAt` and `updatedAt` use PostgreSQL `TIMESTAMPTZ`, with `@updatedAt` managed by Prisma. Cascading deletes from roles or permissions to the matrix prevent dangling permission assignments.
+The active tenant schema also declares `User`, `Tenant`,
+`UserTenantMembership`, and `TenantDatabaseConfig`. Its tenant ID is a UUID,
+whereas the admin schema's `Tenant.id` is an integer. The current login and
+tenant-directory flow uses the admin Prisma client. The purpose and lifecycle
+of these parallel declarations should be clarified before relying on them or
+adding data migrations.
 
-Structural evolution is versioned under `prisma/migrations`. The latest migration replaces a coarse permission-level flag design with `role_permissions`, moving CRUD flags to the role-permission pair and adding database foreign keys. This preserves the key architectural decision: authorization changes are schema-managed and deployable, rather than ad hoc production edits. Prisma’s generated types, relational API, constraints, and centralized Prisma-error mapping reduce drift between application assumptions and PostgreSQL reality.
+No generated Mermaid ER diagrams were found in the case-study documentation
+directory; this README summarizes the schema in a table rather than linking a
+diagram that would not render natively on GitHub Pages.
 
-## 4. Security & Authentication Architecture
+## 4. Authentication, Tenant Resolution & RBAC
 
-### Implemented request and authentication flow
+### Authentication and tenant resolution
 
-1. `POST /api/v1/auth/login` validates the email/password presence in the controller.
-2. `AuthService` retrieves the user with assigned roles, compares the password with bcrypt, and returns a signed one-day JWT plus role IDs through `AuthMapper`.
-3. The React login form stores the access token and role-ID array. Axios injects `Authorization: Bearer <token>` on subsequent requests.
-4. `authenticate` validates the bearer format and JWT signature, then attaches identity claims to the request for downstream handlers.
-5. The global error handler maps known Prisma and operational errors to controlled JSON responses and sends errors to Loggerverse.
+The API source implements the following flow:
 
-JWT claims include the user ID, name, email, and role values. The project also contains a seven-day refresh-token generator, although refresh-token issuance, storage, rotation, and a refresh endpoint are not yet wired into the request flow.
+1. `POST /api/v1/auth/login` checks an active admin account using bcrypt and
+   returns its active tenant memberships. A single active membership is
+   selected automatically; users with multiple memberships can choose one with
+   `POST /api/v1/auth/select-tenant`.
+2. Access JWTs expire after **15 minutes** and include user ID, email, optional
+   tenant ID, and session ID. The random opaque refresh token is stored as a
+   hash in the admin database and sent in an `HttpOnly`, `Secure` cookie.
+3. `POST /api/v1/auth/refresh` rotates refresh tokens; replay of a consumed
+   token revokes its session. Refresh sessions last seven days. Logout revokes
+   the associated session.
+4. Protected feature routes authenticate the bearer JWT, validate active
+   tenant membership and tenant status, resolve tenant database configuration,
+   and attach the tenant Prisma client to the request.
+5. Feature routes check a tenant-local permission code before invoking their
+   controller. Refresh and logout additionally enforce the configured client
+   origin.
 
-### RBAC design
+These are source-level findings, not a security certification. Deployment
+cookie behavior, secret management, CSRF posture, and end-to-end session flows
+remain to be verified.
 
-The server-side IAM query `getAllUserPermissions(userId)` resolves every role assigned to the user, reads matching `RolePermission` rows, and aggregates each action with an **allow-if-any-role-allows** rule. This produces a per-permission effective policy suitable for module/action checks. On the client, Redux loads roles and permission mappings concurrently; `selectUserPermission` implements the same matrix lookup for UI affordances. `ProtectedRoute` also guards route groups using role IDs—currently, the user-creation path is limited to `SUPER_ADMIN` and `ADMIN` IDs—and redirects unauthenticated/unauthorized users to login or the 401 page.
+### Roles, permission codes, and assignments
 
-The client guard improves navigation and prevents accidental exposure, but it is deliberately not the security boundary: local storage and browser code are controlled by the client. The API must independently authenticate every protected route and authorize the requested action.
+The tenant seed defines three default roles:
 
-### Current security hardening required
+| Role | Seeded permissions |
+| --- | --- |
+| `INSTITUTION_ADMIN` | All seeded institution, academic, student, teacher, user, role, attendance, and audit permissions. |
+| `CAMPUS_ADMIN` | Student read/create/update; teacher read; academic read; user read; attendance read/mark/submit. |
+| `TEACHER` | Student read; teacher read; academic read; attendance read/mark/submit. |
 
-The authentication middleware exists but is commented out in `server.ts`, and IAM routes are mounted before that commented protection point. As checked in, those API routes are not protected by JWT middleware and no reusable backend `authorize(permission, action)` middleware is mounted. This is the principal gap before production use.
+The permission catalog uses explicit codes:
 
-Recommended next implementation:
+```text
+institution.read       institution.manage
+academic.read          academic.manage
+student.read           student.create          student.update
+teacher.read           teacher.create          teacher.update
+user.read              user.manage
+role.read              role.manage
+attendance.read        attendance.mark         attendance.submit
+audit.read
+```
 
-- Mount `authenticate` ahead of all protected API routers; explicitly preserve only public endpoints such as login.
-- Add an authorization middleware that resolves the authenticated user’s effective permission for a route/action and returns `403` on denial.
-- Keep the permission selector for UX only; hide or disable controls and navigation from the same server-issued/effective policy.
-- Move tokens to secure, `HttpOnly`, `SameSite` cookies (or carefully mitigate the XSS risk of local storage), configure CORS with explicit origins/credentials, add refresh rotation/revocation, rate-limit login, and validate request DTOs.
-- Remove development `console.log` output that can disclose claims or role information and standardize the JWT payload field names consumed by middleware.
+Tenant-local `UserProfile`, `UserRole`, and `Role` records represent role
+assignments. The IAM API includes role and permission reads and role-permission
+grant/revoke operations. API middleware performs permission checks; frontend
+guards provide additional navigation and presentation controls, not the
+security boundary. Attendance services also check teacher assignments for
+section access.
 
-## 5. Frontend Performance Engineering
+Current route gates include `student.read/create/update`,
+`teacher.read/create/update`, `attendance.read`, `attendance.mark`, and
+`attendance.submit`. Enrollment creation uses `student.create`; guardian
+association uses `student.update`. These policy choices should be reviewed
+against product requirements.
 
-The client is a TypeScript React 19 SPA built with Vite and Material UI. State is deliberately separated by concern: `CustomizerSlice` stores presentation/layout state, while `PermissionSlice` stores authorization bootstrap data, current user data, loading state, and errors. Redux Toolkit’s `createAsyncThunk` coordinates role and permission retrieval with `Promise.all`, avoiding serial startup network calls. Typed store hooks provide a consistent integration point for feature components.
+## 5. Implemented School Modules
 
-Route-level code splitting is implemented through `React.lazy` and the `Loadable` wrapper. Layouts, login/signup, home, permissions, error screens, and user creation are loaded only when their route is visited; both route wrappers and the root use `Suspense` with a spinner fallback. This keeps the initial ERP shell smaller as modules multiply. The Vite configuration also sets a deployable `/erp/` base path and uses optimized dependency handling.
+The following areas have corresponding frontend pages/routes and backend API
+modules in source. Their presence does not demonstrate that the app builds, the
+database is migrated, or the user workflows succeed at runtime.
 
-The current performance strategy is appropriate for the active IAM scope. As data-intensive ERP modules arrive, extend it with paginated/filterable server endpoints, request cancellation and cache invalidation, virtualization for large tables, route/module prefetching for common workflows, and measured bundle chunk boundaries. Avoid putting every form and table record in global Redux: retain short-lived component state locally and reserve global state for cross-route, shared concerns such as session, permissions, and UI preferences.
+| Area | Source-visible functionality | Status |
+| --- | --- | --- |
+| **Academics** | Academic years, classes, sections, and subjects expose list/detail/create/update routes and pages, using `academic.read` and `academic.manage`. | Implemented in source; runtime unverified |
+| **Students & enrollments** | Student list/detail/create/update, enrollment creation, guardian association, admission and enrollment UI workflows. | Implemented in source; runtime unverified |
+| **Teachers** | Teacher list/detail/create/update and subject/section assignment routes and UI. | Implemented in source; runtime unverified |
+| **Attendance** | Session list/detail/create, record entry, and submission. The service checks draft state, active enrollment, duplicate records, and teacher section assignments. | Implemented in source; runtime unverified |
+| **User administration** | User list/detail/create/update, activation/deactivation, and role assignment/removal; admin accounts and memberships coordinate with tenant-local profiles and roles. | Implemented in source; runtime unverified |
+| **Security administration** | Role/permission reads, role-permission grant/revoke routes, permission-matrix UI, audit-log read route, and audit model. | Implemented in source; runtime unverified |
 
-## 6. Current Status & Next Steps
+## 6. Current Status, Limitations & Next Steps
 
-### Current phase
+### Current implementation status
 
-The project is in the **IAM and application-shell foundation phase**. Working foundations include the React/Vite/MUI shell, Redux store, lazy route definitions, login UI and JWT issuance, bcrypt password hashing, Prisma/PostgreSQL schema and migrations, user creation with role assignment, IAM read endpoints, structured API error handling, Swagger setup, and slow-query/error logging hooks.
+The repository contains frontend pages and API routes/services for academic
+setup, students and enrollments, teachers and assignments, attendance, user
+administration, IAM, and audit-log reads. It also contains separate admin and
+tenant Prisma schemas, migration directories, seeds, and API tests. This
+documentation update did **not** run application builds, Prisma validation,
+migrations, or test suites. No feature should be treated as tested,
+production-ready, or deployed based solely on source presence.
 
-The active product surface is intentionally concentrated on authorization administration: roles, permissions, permission-to-role matrix reads, protected client routing, and super-admin user creation. ERP domain modules (such as finance, purchasing, inventory, HR, or domain-specific operations) are not represented in the Prisma schema or route modules yet.
+### Limitations and open questions
 
-### Next engineering milestones
+- The tenant schema declares user, tenant, membership, and database-config
+  models in addition to corresponding admin-database models. Confirm ownership,
+  seed behavior, and migration intent.
+- Several tenant-side identity IDs are logical references without
+  cross-database foreign keys. Account, membership, profile, teacher, and audit
+  lifecycle consistency requires application-level validation.
+- Route declarations and the presence of tests do not establish coverage or
+  passing behavior. Permission-policy consistency, tenant isolation, cookie
+  configuration, and failure handling need verification using controlled test
+  databases.
+- No generated Mermaid ER files were found in the case-study documentation
+  directory.
 
-1. Make server-side JWT authentication and action-level RBAC mandatory on every protected route; add authorization tests for both allow and deny cases.
-2. Complete IAM write operations and audited administration flows for role-permission assignments; provide an effective-permissions endpoint for the signed-in user.
-3. Define the first bounded ERP domain module with its own Prisma models, migration, API module, route-level UI, ownership rules, and integration tests.
-4. Establish production controls: DTO validation, secure session/token lifecycle, explicit CORS policy, secrets management, CI migrations, health checks, metrics, structured logs, and API contract tests.
-5. If the product serves multiple organizations, introduce tenant ownership and enforce tenant scoping in database constraints, Prisma queries, authorization policies, and observability metadata from the first domain migration.
+### Prioritized next steps
 
-The architecture is well positioned for this expansion because IAM is already a first-class module and the codebase separates UI, HTTP, business, and persistence responsibilities. The most important transition from foundation to production is enforcing the same RBAC policy at the API boundary that the frontend currently uses for navigation and presentation.
+1. Run Prisma validation and client generation, API and frontend builds, lint,
+   and targeted auth, tenant-resolution, user-administration, RBAC, and domain
+   tests in a safe non-production environment; record actual results.
+2. Resolve the duplicate admin/tenant identity model declarations and document
+   authoritative user, membership, profile, and role lifecycles, including
+   cross-database failure recovery.
+3. Add authorization allow/deny and tenant-isolation tests for protected
+   routes; reconcile the seeded role matrix with route permissions and
+   attendance/teacher scope rules.
+4. Review request validation, refresh-cookie and origin/CSRF configuration,
+   login throttling, secret management, and audit coverage before production
+   use.
+5. Verify migrations, seed procedures, backup/restore, health checks, and API
+   contracts against non-production infrastructure.
