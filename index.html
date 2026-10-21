@@ -3,364 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise ERP — Technical Case Study</title>
+    <title>Systra School ERP — Technical Case Study</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        pre, code {
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .sidebar-link.active {
-            color: #3b82f6;
-            border-left-color: #3b82f6;
-            background-color: #eff6ff;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        pre, code { font-family: 'JetBrains Mono', monospace; }
+        .sidebar-link.active { color: #3b82f6; border-left-color: #3b82f6; background-color: #eff6ff; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
-
     <header class="bg-gradient-to-r top-0 z-50 from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-6 border-b border-slate-800 shadow-lg">
         <div class="max-w-7xl mx-auto animate__animated animate__fadeIn">
             <div class="flex items-center space-x-3 text-indigo-400 text-sm font-semibold tracking-wider uppercase mb-3">
                 <i class="fa-solid fa-layer-group"></i>
-                <span>Architectural Blueprint & DevOps Infrastructure</span>
+                <span>School ERP Architecture &amp; Implementation Status</span>
             </div>
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">
-                Enterprise ERP
-            </h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">Systra School ERP</h1>
             <p class="mt-4 text-xl text-slate-400 max-w-3xl font-light">
-                A technical case study on building a modular Identity and Access Management foundation using React 19, Express, and Prisma, backed by an automated GitOps delivery pipeline.
+                A technical case study of a tenant-aware school administration system using React 19, Express, Prisma, and PostgreSQL. Source implementation is documented separately from verified runtime status.
             </p>
             <div class="mt-6 flex flex-wrap gap-2.5">
                 <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-md border border-slate-700 font-mono"><i class="fa-brands fa-react text-sky-400 mr-1.5"></i>React 19 / Vite</span>
-                <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-md border border-slate-700 font-mono"><i class="fa-brands fa-node-js text-green-400 mr-1.5"></i>Express (TS)</span>
-                <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-md border border-slate-700 font-mono"><i class="fa-solid fa-database text-blue-400 mr-1.5"></i>PostgreSQL & Prisma</span>
-                <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-md border border-slate-700 font-mono"><i class="fa-brands fa-digitalocean text-sky-500 mr-1.5"></i>DO Droplet</span>
-                <span class="bg-indigo-950 text-indigo-300 text-xs px-3 py-1.5 rounded-md border border-indigo-800 font-mono"><i class="fa-brands fa-github-actions mr-1.5"></i>CI/CD GitOps</span>
+                <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-md border border-slate-700 font-mono"><i class="fa-brands fa-node-js text-green-400 mr-1.5"></i>Express 5 / TypeScript</span>
+                <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-md border border-slate-700 font-mono"><i class="fa-solid fa-database text-blue-400 mr-1.5"></i>PostgreSQL / Prisma 6</span>
+                <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-md border border-slate-700 font-mono"><i class="fa-solid fa-shield-halved text-sky-500 mr-1.5"></i>Tenant-scoped RBAC</span>
+                <span class="bg-indigo-950 text-indigo-300 text-xs px-3 py-1.5 rounded-md border border-indigo-800 font-mono"><i class="fa-solid fa-school mr-1.5"></i>School operations</span>
             </div>
         </div>
     </header>
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 py-12">
         <div class="flex flex-col lg:flex-row gap-8">
-            
             <aside class="lg:w-64 flex-shrink-0 lg:sticky lg:top-8 h-fit">
                 <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-3">Documentation Sections</p>
-                    <nav class="space-y-1">
-                        <a href="#overview" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-circle-info w-5 text-slate-400"></i>1. Overview & Problem</a>
-                        <a href="#architecture" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-sitemap w-5 text-slate-400"></i>2. Architecture & Pattern</a>
-                        <a href="#database" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-database w-5 text-slate-400"></i>3. Schema & Modeling</a>
-                        <a href="#security" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-lock w-5 text-slate-400"></i>4. Security & RBAC</a>
-                        <a href="#performance" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-gauge-high w-5 text-slate-400"></i>5. Frontend Performance</a>
-                        <a href="#milestones" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-flag w-5 text-slate-400"></i>6. Status & Next Steps</a>
-                        <a href="#devops" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-terminal w-5 text-indigo-500 font-bold"></i>7. DevOps & Deployment</a>
+                    <nav class="space-y-1" aria-label="Case study sections">
+                        <a href="#overview" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-circle-info w-5 text-slate-400"></i>1. Overview &amp; Stack</a>
+                        <a href="#architecture" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-sitemap w-5 text-slate-400"></i>2. Architecture &amp; Pattern</a>
+                        <a href="#database" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-database w-5 text-slate-400"></i>3. Database Architecture</a>
+                        <a href="#security" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-lock w-5 text-slate-400"></i>4. Auth &amp; RBAC</a>
+                        <a href="#modules" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-school w-5 text-slate-400"></i>5. School Modules</a>
+                        <a href="#performance" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-gauge-high w-5 text-slate-400"></i>6. Frontend Performance</a>
+                        <a href="#milestones" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-flag w-5 text-slate-400"></i>7. Status &amp; Next Steps</a>
+                        <a href="#devops" class="sidebar-link block px-3 py-2 text-sm font-medium text-slate-600 border-l-2 border-transparent hover:text-slate-900 hover:bg-slate-50 rounded-r-md transition-all"><i class="fa-solid fa-terminal w-5 text-indigo-500 font-bold"></i>8. CI/CD Evidence</a>
                     </nav>
                 </div>
             </aside>
 
             <main class="flex-1 space-y-12 max-w-4xl">
-                
                 <section id="overview" class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all hover:shadow-md animate__animated animate__fadeInUp">
                     <div class="flex items-center space-x-3 mb-6">
                         <div class="p-2.5 bg-blue-50 text-blue-600 rounded-lg"><i class="fa-solid fa-circle-info text-xl"></i></div>
-                        <h2 class="text-2xl font-bold text-slate-950">1. Project Overview & Problem Statement</h2>
+                        <h2 class="text-2xl font-bold text-slate-950">1. Project Overview &amp; Technology Stack</h2>
                     </div>
-                    <p class="text-slate-600 leading-relaxed">
-                        This project is a modular Enterprise Resource Planning (ERP) application under active development. It uses a <strong>React 19 / Vite single-page application (SPA)</strong> for the operational interface and a <strong>TypeScript Express API backed by PostgreSQL through Prisma ORM</strong>. The foundation currently concentrates on Identity and Access Management (IAM): user creation, role assignment, a permissions matrix, login, and protected client routes.
-                    </p>
-                    <p class="text-slate-600 leading-relaxed mt-4">
-                        An ERP becomes difficult to evolve when each business domain owns isolated data and authorization rules. The design addresses that problem by establishing a shared identity layer and a consistent API/data boundary before domain modules are added. This supports:
-                    </p>
+                    <p class="text-slate-600 leading-relaxed">Systra is a school ERP under active development. The frontend is a <strong>React 19, TypeScript, Vite SPA</strong> using Material UI, Redux Toolkit, Axios, and React Router. The backend is a <strong>TypeScript / Express 5 API</strong> using Prisma 6 and PostgreSQL. Source includes academic structure, student/enrollment, teacher/assignment, attendance, user, and permission workflows.</p>
+                    <p class="text-slate-600 leading-relaxed mt-4">The backend separates a central <strong>admin database</strong> for identities, memberships, tenant records, database configuration, and refresh sessions from per-tenant databases for school profiles, academics, attendance, roles, and permissions. Tenant-aware middleware resolves a tenant before domain routes use its Prisma client. This describes source architecture, not a verified deployment.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                            <h4 class="font-semibold text-slate-900 mb-1"><i class="fa-solid fa-shield-halved text-indigo-500 mr-2"></i>Consistent Authorization</h4>
-                            <p class="text-sm text-slate-600">Permissions are modeled as data rather than scattered as hard-coded UI conditions across separate views.</p>
-                        </div>
-                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                            <h4 class="font-semibold text-slate-900 mb-1"><i class="fa-solid fa-cubes text-blue-500 mr-2"></i>Composable Modules</h4>
-                            <p class="text-sm text-slate-600">Future ERP modules can be represented as permission records and implemented as independent API layers without changing the IAM core.</p>
-                        </div>
-                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                            <h4 class="font-semibold text-slate-900 mb-1"><i class="fa-solid fa-link text-emerald-500 mr-2"></i>Relational Integrity</h4>
-                            <p class="text-sm text-slate-600">PostgreSQL relationships prevent orphaned records; Prisma provides a strictly-typed client layer over them.</p>
-                        </div>
-                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                            <h4 class="font-semibold text-slate-900 mb-1"><i class="fa-solid fa-chart-line text-purple-500 mr-2"></i>Operational Scale</h4>
-                            <p class="text-sm text-slate-600">A separate SPA and API tier allow each layer to be deployed and scaled independently behind Nginx proxy routing.</p>
-                        </div>
+                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl"><h3 class="font-semibold text-slate-900 mb-1"><i class="fa-solid fa-shield-halved text-indigo-500 mr-2"></i>Authorization</h3><p class="text-sm text-slate-600">Tenant-local role and permission codes are checked by API middleware; frontend route guards are a usability layer, not the security boundary.</p></div>
+                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl"><h3 class="font-semibold text-slate-900 mb-1"><i class="fa-solid fa-cubes text-blue-500 mr-2"></i>School Modules</h3><p class="text-sm text-slate-600">School features are divided into API modules, with routes, controllers, and services, alongside frontend pages and API helpers.</p></div>
+                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl"><h3 class="font-semibold text-slate-900 mb-1"><i class="fa-solid fa-link text-emerald-500 mr-2"></i>Relational Integrity</h3><p class="text-sm text-slate-600">Prisma foreign keys protect relationships within each database; cross-database identity IDs are logical references checked in application code.</p></div>
+                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl"><h3 class="font-semibold text-slate-900 mb-1"><i class="fa-solid fa-chart-line text-purple-500 mr-2"></i>Separate Tiers</h3><p class="text-sm text-slate-600">The SPA and API are separate codebases. Deployment workflows exist in source, but successful deployment and live infrastructure are not verified here.</p></div>
                     </div>
                     <blockquote class="mt-6 border-l-4 border-amber-500 bg-amber-50/50 p-4 rounded-r-xl text-sm text-amber-900">
-                        <p class="font-medium"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i>Architectural Note on Multi-Tenancy</p>
-                        <p class="mt-1 text-amber-800">The present schema is single-organization. Multi-tenancy is a planned extension. A robust future iteration will introduce an <code class="bg-amber-100/80 px-1 rounded font-mono text-xs">Organization</code> schema and require tenant boundaries on all domain queries and unique constraints.</p>
+                        <p class="font-medium"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i>Implementation and verification status</p>
+                        <p class="mt-1 text-amber-800">Multi-tenancy and school-domain functionality are present in source. Builds, migrations, tests, deployed endpoints, and end-to-end workflows have not been verified for this documentation update; do not infer production readiness.</p>
                     </blockquote>
+                    <p class="text-slate-500 text-sm mt-5">Package manifests declare React 19, TypeScript 5.9, Vite 8, MUI 9, Redux Toolkit, React Router 7, and Axios for the web app; Express 5, Prisma 6, bcrypt, JWT, Swagger UI, Vitest, and Supertest for the API. Dependency declarations do not establish successful builds or tests.</p>
                 </section>
 
                 <section id="architecture" class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all hover:shadow-md">
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg"><i class="fa-solid fa-sitemap text-xl"></i></div>
-                        <h2 class="text-2xl font-bold text-slate-950">2. System Architecture & Folder Pattern</h2>
-                    </div>
-                    <p class="text-slate-600 leading-relaxed mb-6">
-                        The backend follows a <strong>modular layered architecture</strong>. Each business capability is isolated under <code class="bg-slate-100 px-1 py-0.5 rounded text-rose-600 font-mono text-sm">src/modules/&lt;module&gt;</code> and exposes its own routes, controllers, services, types/DTOs, and mappers. Requests gracefully move down through predefined layers:
-                    </p>
-
+                    <div class="flex items-center space-x-3 mb-6"><div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg"><i class="fa-solid fa-sitemap text-xl"></i></div><h2 class="text-2xl font-bold text-slate-950">2. System Architecture &amp; Folder Pattern</h2></div>
+                    <p class="text-slate-600 leading-relaxed mb-6">The frontend groups routed pages under <code>src/pages</code>, shared UI under <code>src/components</code>, API helpers under <code>src/api</code>, and state under <code>src/store</code>. The API organizes modules under <code>src/modules</code>, commonly with routes, controllers, and services. Prisma is the persistence boundary; validation and data access also occur in services, so the layering is not universal.</p>
                     <div class="bg-slate-900 text-slate-300 p-4 rounded-xl mb-6 overflow-x-auto text-xs font-mono border border-slate-800 shadow-inner flex justify-between items-center whitespace-nowrap min-w-full">
-                        <span>React View</span> <i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i>
-                        <span>API Helper</span> <i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i>
-                        <span>Axios Interceptor</span> <i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i>
-                        <span class="text-indigo-400 font-bold">/api/v1 Route</span> <i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i>
-                        <span>Controller</span> <i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i>
-                        <span>Service</span> <i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i>
-                        <span class="text-emerald-400 font-bold">Prisma Client</span> <i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i>
-                        <span>PostgreSQL</span>
+                        <span>React page</span><i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i><span>API Helper / Axios</span><i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i><span class="text-indigo-400 font-bold">Express Route</span><i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i><span>Authenticate</span><i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i><span>Resolve tenant</span><i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i><span>Permission check</span><i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i><span>Controller / service</span><i class="fa-solid fa-arrow-right text-slate-600 mx-1"></i><span class="text-emerald-400 font-bold">Tenant Prisma → PostgreSQL</span>
                     </div>
-
                     <details class="group border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50">
-                        <summary class="flex justify-between items-center font-medium text-slate-700 p-4 cursor-pointer select-none hover:bg-slate-100 transition-colors">
-                            <span><i class="fa-regular fa-folder-open text-amber-500 mr-2"></i>View Project Directory Structure Tree</span>
-                            <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down text-slate-400"></i></span>
-                        </summary>
-                        <div class="p-4 bg-slate-950 text-slate-300 font-mono text-xs border-t border-slate-200 overflow-x-auto max-h-96">
-<pre>
+                        <summary class="flex justify-between items-center font-medium text-slate-700 p-4 cursor-pointer select-none hover:bg-slate-100 transition-colors"><span><i class="fa-regular fa-folder-open text-amber-500 mr-2"></i>View Project Directory Structure Tree</span><span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down text-slate-400"></i></span></summary>
+                        <div class="p-4 bg-slate-950 text-slate-300 font-mono text-xs border-t border-slate-200 overflow-x-auto max-h-96"><pre>
 E:\erp
 ├── web.erp/                              # React/Vite client
-│   ├── src/
-│   │   ├── api/                           # Axios instance and feature API helpers
-│   │   ├── components/gaurd/              # Client-side route authorization
-│   │   └── store/                         # Redux Toolkit slices and typed hooks
+│   ├── src/api/                           # Axios client and feature helpers
+│   ├── src/components/                    # Shared UI and route guards
+│   ├── src/layout/                        # Authenticated layout and navigation
+│   ├── src/pages/                         # Academics, students, teachers, attendance,
+│   │                                      # users, permissions, and audit
+│   ├── src/router/                        # React Router routes and guards
+│   └── src/store/                         # Redux Toolkit state
 ├── api.erp/                              # Express/TypeScript API
-│   ├── prisma/
-│   │   ├── schemas/                       # Prisma datasource and IAM model files
-│   │   └── migrations/                    # Versioned PostgreSQL DDL
+│   ├── prisma/admin/                      # Admin schema, migrations, and seed
+│   ├── prisma/tenant/                     # Tenant schema, migrations, and seed
 │   └── src/
-│       ├── modules/
-│       │   ├── auth/                      # Login controller/service/mapper/routes
-│       │   ├── iam/                       # Roles and permission-matrix reads
-│       │   └── user/                      # User CRUD orchestration
-└── nginx/                                 # Local reverse-proxy configuration
-</pre>
-                        </div>
+│       ├── middlewares/                   # Authentication, tenant, permissions
+│       ├── modules/                       # Auth, IAM, users, academics, students,
+│       │                                  # teachers, attendance, audit, tenant
+│       ├── infrastructure/                # Admin and tenant Prisma clients
+│       └── app.ts / server.ts             # Middleware, routes, and startup
+└── api.documentation/                     # API and static case-study docs
+                        </pre></div>
                     </details>
+                    <p class="text-slate-600 text-sm leading-relaxed mt-4">Most feature routers are mounted under both <code>/api</code> and <code>/api/v1</code>; auth and tenant routes have versioned aliases. <code>/health</code> and <code>/api-docs</code> are mounted separately. This confirms source wiring only, not deployment availability.</p>
                 </section>
 
                 <section id="database" class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all hover:shadow-md">
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg"><i class="fa-solid fa-database text-xl"></i></div>
-                        <h2 class="text-2xl font-bold text-slate-950">3. Database Design & Schema Modeling</h2>
-                    </div>
-                    <p class="text-slate-600 leading-relaxed mb-6">
-                        Prisma splits schemas into logical components (<code class="bg-slate-100 px-1 py-0.5 rounded text-rose-600 font-mono text-sm">base.prisma</code> and <code class="bg-slate-100 px-1 py-0.5 rounded text-rose-600 font-mono text-sm">iam.prisma</code>) which compile down to native versioned tables. Service methods use strictly-typed hooks to query data.
-                    </p>
-
+                    <div class="flex items-center space-x-3 mb-6"><div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg"><i class="fa-solid fa-database text-xl"></i></div><h2 class="text-2xl font-bold text-slate-950">3. Database Architecture &amp; Relationships</h2></div>
+                    <p class="text-slate-600 leading-relaxed mb-6">The admin Prisma client uses <code>prisma/admin/schema.prisma</code> and <code>ADMIN_DATABASE_URL</code>. The tenant Prisma client uses <code>prisma/tenant/schema.prisma</code> and connects dynamically from tenant database configuration. Migrations are configured under <code>prisma/admin/migrations</code> and <code>prisma/tenant/migrations</code>; the separate <code>prisma/schemas</code> files are not selected by current configs.</p>
                     <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm mb-4">
                         <table class="min-w-full divide-y divide-slate-200 text-sm text-left">
-                            <thead class="bg-slate-50 text-slate-700 uppercase tracking-wider text-xs font-semibold">
-                                <tr>
-                                    <th class="px-6 py-4">Model Name</th>
-                                    <th class="px-6 py-4">Purpose and Relationships</th>
-                                </tr>
-                            </thead>
+                            <thead class="bg-slate-50 text-slate-700 uppercase tracking-wider text-xs font-semibold"><tr><th class="px-6 py-4">Database / domain</th><th class="px-6 py-4">Models and relationships</th></tr></thead>
                             <tbody class="divide-y divide-slate-200 text-slate-600">
-                                <tr class="hover:bg-slate-50/70 transition-colors">
-                                    <td class="px-6 py-4 font-mono font-semibold text-indigo-600">User</td>
-                                    <td class="px-6 py-4">Unique indexed <code class="bg-slate-100 text-xs px-1 rounded">userEmail</code>, bcrypt password hash, and audit timestamps. Many-to-many relationship with roles.</td>
-                                </tr>
-                                <tr class="hover:bg-slate-50/70 transition-colors">
-                                    <td class="px-6 py-4 font-mono font-semibold text-indigo-600">Role</td>
-                                    <td class="px-6 py-4">A named authority grouping connecting users and unique application permission rules via <code class="bg-slate-100 text-xs px-1 rounded">RolePermission</code>.</td>
-                                </tr>
-                                <tr class="hover:bg-slate-50/70 transition-colors">
-                                    <td class="px-6 py-4 font-mono font-semibold text-indigo-600">Permission</td>
-                                    <td class="px-6 py-4">Master catalog of module boundaries, identified by a unique key matching features (e.g., <code class="bg-slate-100 text-xs px-1 rounded">students</code>).</td>
-                                </tr>
-                                <tr class="hover:bg-slate-50/70 transition-colors">
-                                    <td class="px-6 py-4 font-mono font-semibold text-indigo-600">RolePermission</td>
-                                    <td class="px-6 py-4 bg-emerald-50/30 font-medium">Explicit compound primary key matrix holding dynamic contextual access decisions: <code class="bg-slate-100 text-xs px-1 rounded">canRead</code>, <code class="bg-slate-100 text-xs px-1 rounded">canAdd</code>, <code class="bg-slate-100 text-xs px-1 rounded">canEdit</code>, <code class="bg-slate-100 text-xs px-1 rounded">canDelete</code>.</td>
-                                </tr>
+                                <tr><td class="px-6 py-4 font-semibold text-indigo-600">Admin database</td><td class="px-6 py-4"><code>User</code>, <code>Tenant</code>, <code>UserTenantMembership</code>, <code>TenantDatabaseConfig</code>, <code>RefreshSession</code>, and <code>RefreshSessionToken</code>. Membership/user and tenant/config/session links are Prisma foreign keys; refresh tokens reference sessions and rotation history.</td></tr>
+                                <tr><td class="px-6 py-4 font-semibold text-indigo-600">Tenant: school setup</td><td class="px-6 py-4"><code>Institution</code>, <code>AcademicYear</code>, <code>Class</code>, <code>Section</code>, and <code>Subject</code>. Sections have foreign keys to classes and academic years.</td></tr>
+                                <tr><td class="px-6 py-4 font-semibold text-indigo-600">Tenant: school operations</td><td class="px-6 py-4"><code>Teacher</code>, <code>TeacherAssignment</code>, <code>Student</code>, <code>Guardian</code>, <code>StudentGuardian</code>, <code>Enrollment</code>, <code>AdmissionSerial</code>, <code>AttendanceSession</code>, <code>AttendanceRecord</code>, and <code>AuditLog</code>. Domain relations use foreign keys within the tenant database.</td></tr>
+                                <tr><td class="px-6 py-4 font-semibold text-indigo-600">Tenant: access control</td><td class="px-6 py-4"><code>UserProfile</code>, <code>Role</code>, <code>Permission</code>, <code>UserRole</code>, and <code>RolePermission</code>. Assignment joins have foreign keys; <code>RolePermission</code> has a composite primary key.</td></tr>
                             </tbody>
                         </table>
                     </div>
+                    <p class="text-slate-600 text-sm leading-relaxed"><strong>Cross-database IDs are logical references, not foreign keys.</strong> Tenant <code>UserProfile.userId</code>, <code>Teacher.userId</code>, <code>AttendanceSession.createdByUserId</code>, and <code>AuditLog.actorUserId</code> do not relate to admin rows through Prisma. Application logic must maintain consistency.</p>
+                    <p class="text-slate-600 text-sm leading-relaxed mt-3">The tenant schema also declares user, tenant, membership, and database-config models. Its tenant ID is UUID while the admin schema's <code>Tenant.id</code> is integer; login and tenant-directory code use the admin Prisma client. Clarify ownership and lifecycle before relying on these parallel declarations.</p>
                 </section>
 
                 <section id="security" class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all hover:shadow-md">
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div class="p-2.5 bg-rose-50 text-rose-600 rounded-lg"><i class="fa-solid fa-lock text-xl"></i></div>
-                        <h2 class="text-2xl font-bold text-slate-950">4. Security & Authentication Architecture</h2>
+                    <div class="flex items-center space-x-3 mb-6"><div class="p-2.5 bg-rose-50 text-rose-600 rounded-lg"><i class="fa-solid fa-lock text-xl"></i></div><h2 class="text-2xl font-bold text-slate-950">4. Authentication, Tenant Resolution &amp; RBAC</h2></div>
+                    <h3 class="text-lg font-semibold text-slate-900 mb-3">Authentication and tenant resolution</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600 mb-5">
+                        <li><code>POST /api/v1/auth/login</code> verifies an active admin-database user with bcrypt and returns active tenant memberships. One active tenant is selected automatically; users with multiple memberships can select one.</li>
+                        <li>Access JWTs last 15 minutes and contain user ID, email, optional tenant ID, and session ID. A random refresh token is hashed in the admin database and delivered in an <code>HttpOnly</code>, <code>Secure</code> cookie.</li>
+                        <li>The refresh endpoint rotates tokens; replay of a consumed token revokes the session. Refresh sessions last seven days; logout revokes the associated session.</li>
+                        <li>Protected feature routes authenticate the bearer token, validate active membership and tenant status, load tenant database configuration, then attach a tenant Prisma client.</li>
+                        <li>Most feature routes check a tenant-local permission before the controller. Refresh and logout additionally enforce the configured client origin.</li>
+                    </ol>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-5">These are source-level findings, not a security certification. Deployment cookie behavior, secret management, CSRF posture, and end-to-end session flows remain unverified.</p>
+                    <h3 class="text-lg font-semibold text-slate-900 mb-3">Roles, permission codes, and assignments</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">The tenant seed defines <code>INSTITUTION_ADMIN</code>, <code>CAMPUS_ADMIN</code>, and <code>TEACHER</code>. The catalog includes <code>institution.read</code>, <code>institution.manage</code>, <code>academic.read</code>, <code>academic.manage</code>, <code>student.read</code>, <code>student.create</code>, <code>student.update</code>, <code>teacher.read</code>, <code>teacher.create</code>, <code>teacher.update</code>, <code>user.read</code>, <code>user.manage</code>, <code>role.read</code>, <code>role.manage</code>, <code>attendance.read</code>, <code>attendance.mark</code>, <code>attendance.submit</code>, and <code>audit.read</code>.</p>
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm mb-4">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-700 uppercase tracking-wider text-xs font-semibold"><tr><th class="px-6 py-4">Seeded role</th><th class="px-6 py-4">Default permissions</th></tr></thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-600">
+                                <tr><td class="px-6 py-4 font-mono text-indigo-600">INSTITUTION_ADMIN</td><td class="px-6 py-4">All seeded institution, academic, student, teacher, user, role, attendance, and audit codes.</td></tr>
+                                <tr><td class="px-6 py-4 font-mono text-indigo-600">CAMPUS_ADMIN</td><td class="px-6 py-4">Student read/create/update; teacher read; academic read; user read; attendance read/mark/submit.</td></tr>
+                                <tr><td class="px-6 py-4 font-mono text-indigo-600">TEACHER</td><td class="px-6 py-4">Student read; teacher read; academic read; attendance read/mark/submit.</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    
-                    <h3 class="text-lg font-semibold text-slate-900 mb-3">Granular Authorization Metrics</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
-                        Server-side computations dynamically process access metrics across intersecting data layers via an <strong>allow-if-any-role-allows</strong> architectural standard. 
-                    </p>
+                    <p class="text-slate-600 text-sm leading-relaxed">API middleware evaluates permissions from tenant-local profiles, role assignments, and role-permission records. IAM routes include reads and grant/revoke operations. Frontend guards are usability controls; attendance services also check teacher section assignments. Authorization policy coverage still needs testing.</p>
+                </section>
 
-                    <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                        <h4 class="font-semibold text-amber-900 mb-2"><i class="fa-solid fa-circle-exclamation mr-2"></i>Security Hardening Items Checklist</h4>
-                        <ul class="space-y-2 text-sm text-amber-800 list-disc list-inside">
-                            <li>Mount core validation middleware uniformly across all non-public endpoints.</li>
-                            <li>Enforce rigorous server-side authorization evaluation instead of purely relying on visual UI layer guards.</li>
-                            <li>Transition tokens from browser local storage over to cryptographic, secure HTTP-only cookies.</li>
-                        </ul>
+                <section id="modules" class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all hover:shadow-md">
+                    <div class="flex items-center space-x-3 mb-6"><div class="p-2.5 bg-sky-50 text-sky-600 rounded-lg"><i class="fa-solid fa-school text-xl"></i></div><h2 class="text-2xl font-bold text-slate-950">5. Implemented School Modules</h2></div>
+                    <p class="text-slate-600 leading-relaxed mb-5">These features have corresponding frontend pages/routes and API modules in source. This is not evidence of successful builds, migrations, deployed endpoints, or end-to-end behavior.</p>
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-700 uppercase tracking-wider text-xs font-semibold"><tr><th class="px-6 py-4">Area</th><th class="px-6 py-4">Source-visible functionality</th><th class="px-6 py-4">Status</th></tr></thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-600">
+                                <tr><td class="px-6 py-4 font-semibold text-indigo-600">Academics</td><td class="px-6 py-4">Academic years, classes, sections, and subjects have list/detail/create/update routes and pages.</td><td class="px-6 py-4">Implemented in source; runtime unverified</td></tr>
+                                <tr><td class="px-6 py-4 font-semibold text-indigo-600">Students &amp; enrollments</td><td class="px-6 py-4">Student list/detail/create/update, enrollment creation, guardian association, and admission/details UI.</td><td class="px-6 py-4">Implemented in source; runtime unverified</td></tr>
+                                <tr><td class="px-6 py-4 font-semibold text-indigo-600">Teachers</td><td class="px-6 py-4">Teacher list/detail/create/update and subject/section assignment routes and UI.</td><td class="px-6 py-4">Implemented in source; runtime unverified</td></tr>
+                                <tr><td class="px-6 py-4 font-semibold text-indigo-600">Attendance</td><td class="px-6 py-4">Session list/detail/create, record entry, and submission. The service checks draft state, active enrollment, duplicates, and assigned teacher sections.</td><td class="px-6 py-4">Implemented in source; runtime unverified</td></tr>
+                                <tr><td class="px-6 py-4 font-semibold text-indigo-600">User administration</td><td class="px-6 py-4">User list/detail/create/update, activation/deactivation, role assignment/removal, and permission administration UI.</td><td class="px-6 py-4">Implemented in source; runtime unverified</td></tr>
+                                <tr><td class="px-6 py-4 font-semibold text-indigo-600">Security &amp; audit</td><td class="px-6 py-4">Role/permission reads, role-permission grant/revoke, audit-log route and model.</td><td class="px-6 py-4">Implemented in source; runtime unverified</td></tr>
+                            </tbody>
+                        </table>
                     </div>
+                    <p class="text-slate-600 text-sm leading-relaxed mt-4">Current route gates include <code>student.read/create/update</code>, <code>teacher.read/create/update</code>, and <code>attendance.read/mark/submit</code>. Enrollment creation uses <code>student.create</code>; guardian association uses <code>student.update</code>. Review these choices against product requirements.</p>
                 </section>
 
                 <section id="performance" class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all hover:shadow-md">
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div class="p-2.5 bg-amber-50 text-amber-600 rounded-lg"><i class="fa-solid fa-gauge-high text-xl"></i></div>
-                        <h2 class="text-2xl font-bold text-slate-950">5. Frontend Performance Engineering</h2>
-                    </div>
-                    <p class="text-slate-600 leading-relaxed mb-4">
-                        The single-page client decouples presentation slices from validation matrix states. Async thunk abstractions initialize role sets asynchronously via parallel execution configurations.
-                    </p>
-                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
-                        <div class="flex items-start gap-3 text-sm">
-                            <i class="fa-solid fa-bolt text-amber-500 mt-1"></i>
-                            <div>
-                                <span class="font-semibold text-slate-900 block">Code Splitting Boundaries</span>
-                                <span class="text-slate-600">Asynchronous feature views leverage native lazy structures wrapped in customized shell suspension containers.</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="flex items-center space-x-3 mb-6"><div class="p-2.5 bg-amber-50 text-amber-600 rounded-lg"><i class="fa-solid fa-gauge-high text-xl"></i></div><h2 class="text-2xl font-bold text-slate-950">6. Frontend Performance Engineering</h2></div>
+                    <p class="text-slate-600 leading-relaxed mb-4">The React client uses Redux Toolkit for shared app and permission state, Axios helpers for API calls, and React Router. Authentication/permission bootstrap and permission-aware controls are present in source. The router uses lazy-loaded route modules. These are implementation patterns, not verified performance benchmarks; bundle size and runtime performance have not been measured.</p>
                 </section>
 
                 <section id="milestones" class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all hover:shadow-md">
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div class="p-2.5 bg-purple-50 text-purple-600 rounded-lg"><i class="fa-solid fa-flag text-xl"></i></div>
-                        <h2 class="text-2xl font-bold text-slate-950">6. Current Status & Next Steps</h2>
-                    </div>
+                    <div class="flex items-center space-x-3 mb-6"><div class="p-2.5 bg-purple-50 text-purple-600 rounded-lg"><i class="fa-solid fa-flag text-xl"></i></div><h2 class="text-2xl font-bold text-slate-950">7. Current Status, Limitations &amp; Next Steps</h2></div>
                     <div class="border-l-2 border-indigo-200 pl-4 ml-2 space-y-4 text-sm text-slate-600">
-                        <div>
-                            <span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-1">Active State</span>
-                            <p>The application engine successfully manages identity tokens, state machines, routing rules, and persistence generation frameworks. Core administrative capabilities remain focused around verification boundaries prior to expanding system features.</p>
-                        </div>
+                        <div><span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-1">Source implementation; verification pending</span><p>The repository includes school modules, separate admin/tenant schemas, migration directories, seeds, and API tests. Builds, Prisma validation, migrations, and tests were not run for this update. No feature is represented as tested, deployed, or production-ready.</p></div>
                     </div>
+                    <div class="mt-5 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-900">
+                        <h3 class="font-semibold mb-2"><i class="fa-solid fa-circle-exclamation mr-2"></i>Limitations and open questions</h3>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>The tenant schema declares identity-related models alongside admin models; tenant IDs are UUIDs versus integer IDs in the admin schema. Clarify ownership, seeding, and migration intent.</li>
+                            <li>Several tenant identity IDs are logical references without cross-database foreign keys, so application-level lifecycle consistency is essential.</li>
+                            <li>Test presence does not establish passing behavior. Tenant isolation, authorization allow/deny behavior, cookie settings, and error handling need controlled verification.</li>
+                        </ul>
+                    </div>
+                    <h3 class="text-lg font-semibold text-slate-900 mt-6 mb-3">Prioritized next steps</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600">
+                        <li>Run Prisma validation/generation, API and frontend builds, lint, and targeted auth, tenant, user, RBAC, and domain tests in non-production; record outcomes.</li>
+                        <li>Clarify authoritative user, membership, profile, and role ownership and define cross-database failure recovery.</li>
+                        <li>Add authorization allow/deny and tenant-isolation tests; reconcile role assignments with route gates and teacher section scope.</li>
+                        <li>Review validation, refresh-cookie and origin/CSRF configuration, login throttling, secret handling, and audit coverage before production use.</li>
+                        <li>Verify migration/seed procedures, backups, health checks, and API contracts in non-production infrastructure.</li>
+                    </ol>
                 </section>
 
                 <section id="devops" class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all hover:shadow-md">
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg"><i class="fa-solid fa-terminal text-xl"></i></div>
-                        <h2 class="text-2xl font-bold text-slate-950">7. Production DevOps & CI/CD Pipelines</h2>
+                    <div class="flex items-center space-x-3 mb-6"><div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg"><i class="fa-solid fa-terminal text-xl"></i></div><h2 class="text-2xl font-bold text-slate-950">8. CI/CD &amp; Deployment Evidence</h2></div>
+                    <p class="text-slate-600 leading-relaxed mb-5">GitHub Actions deployment workflows exist in both repositories and define DigitalOcean-host deployment steps. Their presence does not prove a successful run, active host, live production routing, or service health.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50"><h3 class="font-semibold text-indigo-700 mb-2">Web workflow (source)</h3><p class="text-sm text-slate-600">Push to <code>main</code>; Node 20; install and build; SCP to <code>/var/www/web.erp</code>; set permissions; run <code>nginx -t</code> and reload Nginx.</p></div>
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50"><h3 class="font-semibold text-emerald-700 mb-2">API workflow (source)</h3><p class="text-sm text-slate-600">Push to <code>main</code>; Node 22; build with database URL secrets; SCP to <code>/root/api.erp</code>; install production dependencies; generate both Prisma clients; restart and save PM2 process state.</p></div>
                     </div>
-                    <p class="text-slate-600 leading-relaxed mb-6">
-                        The live infrastructure architecture maps an autonomous production ecosystem built inside a <strong>DigitalOcean Droplet</strong>. It handles decoupling boundaries via <strong>Nginx multi-domain proxy maps</strong> and manages continuous server operations through <strong>PM2 process managers</strong>.
-                    </p>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                        <div class="bg-slate-900 text-slate-200 p-4 rounded-xl border border-slate-800 flex flex-col justify-between shadow-sm">
-                            <div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-xs uppercase tracking-wider text-indigo-400 font-bold font-mono">1. Git Source</span>
-                                    <i class="fa-brands fa-github text-lg text-slate-400"></i>
-                                </div>
-                                <p class="text-xs text-slate-400">Trigger on remote commit</p>
-                            </div>
-                            <div class="mt-4 pt-2 border-t border-slate-800 text-[11px] font-mono text-emerald-400">
-                                push to branches: [main]
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-900 text-slate-200 p-4 rounded-xl border border-slate-800 flex flex-col justify-between shadow-sm">
-                            <div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-xs uppercase tracking-wider text-amber-400 font-bold font-mono">2. GitHub Runner</span>
-                                    <i class="fa-solid fa-gear text-lg text-slate-400 animate-spin" style="animation-duration: 8s;"></i>
-                                </div>
-                                <p class="text-xs text-slate-400">Environment isolated build</p>
-                            </div>
-                            <div class="mt-4 pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-400">
-                                Node v20 (Web) / v22 (API)<br>
-                                Prisma Client compilation
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-900 text-slate-200 p-4 rounded-xl border border-slate-800 flex flex-col justify-between shadow-sm">
-                            <div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-xs uppercase tracking-wider text-sky-400 font-bold font-mono">3. DO Droplet</span>
-                                    <i class="fa-brands fa-digitalocean text-lg text-sky-400"></i>
-                                </div>
-                                <p class="text-xs text-slate-400">Automated live atomic delivery</p>
-                            </div>
-                            <div class="mt-4 pt-2 border-t border-slate-800 text-[11px] font-mono text-sky-400">
-                                SCP Asset Transmissions<br>
-                                PM2 Reload / Nginx Hook
-                            </div>
-                        </div>
-                    </div>
-
-                    <h3 class="text-lg font-bold text-slate-900 mb-3">CI/CD Engine Implementations</h3>
-                    <div class="space-y-4">
-                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
-                            <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                                <span class="font-mono text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded"><i class="fa-brands fa-react mr-1.5"></i>web.erp Pipeline</span>
-                                <span class="text-xs font-mono text-slate-500">Target: /var/www/web.erp</span>
-                            </div>
-                            <p class="text-sm text-slate-600 mb-3">
-                                Enforces strict environment secret validations before configuring a <strong>Node 20</strong> build image. Compiles optimized production static sets using clean tree-shaking parameters, transmits artifacts over port 22 using Appleboy SCP actions, resolves web server directory ownership flags to <code class="bg-slate-100 text-xs font-mono text-rose-600 px-1">www-data</code>, and triggers a clean, zero-downtime Nginx configuration hot reload.
-                            </p>
-                        </div>
-
-                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
-                            <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                                <span class="font-mono text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded"><i class="fa-brands fa-node-js mr-1.5"></i>api.erp Pipeline</span>
-                                <span class="text-xs font-mono text-slate-500">Target: /root/api.erp</span>
-                            </div>
-                            <p class="text-sm text-slate-600 mb-3">
-                                Spins up an <strong>Ubuntu Virtual Environment running Node 22</strong>. Injects strict database parameters to generate fully optimized, type-safe Prisma binary client sets before initiating build steps. Transmits files while excluding developmental telemetry dependencies via <code class="bg-slate-100 text-xs font-mono text-rose-600 px-1">--omit=dev</code> flags, safely triggers localized environment NVM setups, and hot-starts the backend runtime process loop via PM2 script bindings.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 p-4 bg-slate-900 rounded-xl border border-slate-800">
-                        <h4 class="text-xs uppercase font-bold text-slate-400 tracking-wider mb-2 font-mono">Active Server State Engine Logs</h4>
-                        <div class="text-xs font-mono text-emerald-400 space-y-1 bg-black/40 p-3 rounded border border-slate-800">
-                            <p class="text-slate-500"># Continuous Process Management State Output</p>
-                            <p class="flex justify-between"><span>$ pm2 restart api-erp || pm2 start dist/server.js</span> <span class="text-slate-500">[ONLINE]</span></p>
-                            <p class="text-blue-400">$ pm2 save <span class="text-slate-500">[Saved process snapshot mapping successfully]</span></p>
-                            <p class="mt-2 text-slate-500"># Reverse Proxy Status Routing Map</p>
-                            <p class="text-yellow-400">✓ erp.domain.com ➔ Proxy Pass ➔ /var/www/web.erp</p>
-                            <p class="text-yellow-400">✓ api.erp.domain.com ➔ Proxy Pass ➔ Localhost Address Process Loop</p>
-                        </div>
-                    </div>
+                    <p class="text-slate-500 text-sm mt-4">A local Nginx configuration is present in the repository. Production domains, deployment outcomes, and active server state were not independently verified.</p>
                 </section>
-
             </main>
         </div>
     </div>
 
     <footer class="bg-slate-900 text-slate-500 text-xs text-center py-8 border-t border-slate-800 mt-24">
         <div class="max-w-7xl mx-auto px-4">
-            <p>© 2026 Enterprise ERP System Architecture Case Study.</p>
-            <p class="mt-2">Generated for static web hosting deployment environments via GitHub Pages infrastructure mappings.</p>
+            <p>© 2026 Systra School ERP Technical Case Study.</p>
+            <p class="mt-2">Source implementation documented; runtime and deployment verification pending.</p>
         </div>
     </footer>
-
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
                     const id = entry.target.getAttribute('id');
                     const link = document.querySelector(`nav a[href="#${id}"]`);
-                    if (link) {
-                        if (entry.intersectionRatio > 0.1) {
-                            document.querySelectorAll('nav a').forEach(el => el.classList.remove('active'));
-                            link.classList.add('active');
-                        }
+                    if (link && entry.intersectionRatio > 0.1) {
+                        document.querySelectorAll('nav a').forEach(el => el.classList.remove('active'));
+                        link.classList.add('active');
                     }
                 });
             }, { threshold: [0.1, 0.4] });
-
-            document.querySelectorAll('section[id]').forEach((section) => {
-                observer.observe(section);
-            });
+            document.querySelectorAll('section[id]').forEach(section => observer.observe(section));
         });
     </script>
 </body>
